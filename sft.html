@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SFT — Site for Tajiks</title>
+<style>
+  :root{
+    --indigo-deep:   #182449;
+    --indigo-mid:    #24356e;
+    --adras-magenta: #b23a63;
+    --saffron:       #d9a824;
+    --pamir-green:   #3f6b4a;
+    --paper:         #f3ead6;
+    --paper-dim:     #e6dabd;
+    --ink:           #1c1710;
+    --font-display:  'Zilla Slab', Georgia, 'Times New Roman', serif;
+    --font-body:     'Inter', -apple-system, Segoe UI, sans-serif;
+  }
+
+  @font-face{
+    font-family:'Zilla Slab';
+    src: local('Georgia');
+  }
+
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--font-body);
+    line-height:1.55;
+  }
+
+  /* ---------- decorative ikat border strip ---------- */
+  .ikat-strip{
+    height:10px;
+    width:100%;
+    background:repeating-linear-gradient(
+      45deg,
+      var(--adras-magenta) 0 14px,
+      var(--saffron) 14px 28px,
+      var(--pamir-green) 28px 42px,
+      var(--indigo-mid) 42px 56px
+    );
+  }
+
+  header{
+    background:var(--indigo-deep);
+    color:var(--paper);
+    padding:22px 6vw;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:24px;
+  }
+
+  .brand{ display:flex; align-items:center; gap:16px; }
+
+  .logo-mark{
+    width:56px; height:56px;
+    flex-shrink:0;
+  }
+
+  .brand-text .name{
+    font-family:var(--font-display);
+    font-size:1.9rem;
+    letter-spacing:0.02em;
+    margin:0;
+    color:var(--paper);
+  }
+  .brand-text .tagline{
+    margin:2px 0 0;
+    font-size:0.82rem;
+    color:var(--saffron);
+    font-weight:600;
+  }
+
+  nav a{
+    color:var(--paper);
+    text-decoration:none;
+    margin-left:28px;
+    font-size:0.95rem;
+    border-bottom:2px solid transparent;
+    padding-bottom:3px;
+    transition:border-color .2s ease;
+  }
+  nav a:hover{ border-color:var(--saffron); }
+
+  /* ---------- hero ---------- */
+  .hero{
+    position:relative;
+    padding:88px 6vw 96px;
+    background:
+      radial-gradient(ellipse at 15% 20%, rgba(217,168,36,0.16), transparent 55%),
+      var(--indigo-deep);
+    color:var(--paper);
+    overflow:hidden;
+  }
+  .hero::after{
+    content:"";
+    position:absolute; left:0; right:0; bottom:0;
+    height:120px;
+    background:
+      linear-gradient(115deg, transparent 48%, var(--paper) 48.4%),
+      linear-gradient(65deg, transparent 52%, var(--paper) 52.4%);
+    opacity:0.95;
+  }
+  .hero-inner{
+    position:relative; z-index:2;
+    max-width:640px;
+  }
+  .hero h1{
+    font-family:var(--font-display);
+    font-size:clamp(2.2rem, 4.4vw, 3.4rem);
+    line-height:1.08;
+    margin:0 0 20px;
+  }
+  .hero h1 span{ color:var(--saffron); }
+  .hero p{
+    font-size:1.08rem;
+    color:#e7deca;
+    max-width:52ch;
+  }
+  .hero .cta{
+    display:inline-block;
+    margin-top:28px;
+    padding:13px 28px;
+    background:var(--adras-magenta);
+    color:var(--paper);
+    text-decoration:none;
+    font-weight:600;
+    border-radius:2px;
+    box-shadow:0 6px 0 rgba(0,0,0,0.18);
+    transition:transform .15s ease;
+  }
+  .hero .cta:hover{ transform:translateY(-2px); }
+
+  /* ---------- sections ---------- */
+  section{
+    padding:64px 6vw;
+    max-width:1100px;
+    margin:0 auto;
+  }
+  section h2{
+    font-family:var(--font-display);
+    font-size:1.9rem;
+    margin:0 0 8px;
+    color:var(--indigo-deep);
+  }
+  section .lead{
+    color:#5a5142;
+    margin:0 0 36px;
+    max-width:60ch;
+  }
+
+  .about-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:36px;
+    align-items:start;
+  }
+  .about-grid .card{
+    background:var(--paper-dim);
+    border-left:4px solid var(--pamir-green);
+    padding:22px 24px;
+  }
+  .about-grid .card h3{
+    margin:0 0 8px;
+    font-family:var(--font-display);
+    font-size:1.15rem;
+  }
+  .about-grid .card p{ margin:0; color:#4a4234; font-size:0.96rem; }
+
+  @media (max-width: 720px){
+    .about-grid{ grid-template-columns:1fr; }
+  }
+
+  /* ---------- gallery / upload ---------- */
+  .gallery-panel{
+    background:var(--indigo-deep);
+    color:var(--paper);
+    border-radius:4px;
+  }
+  .gallery-panel-inner{ padding:44px 6vw; }
+  .gallery-panel h2{ color:var(--paper); }
+  .gallery-panel .lead{ color:#cfc6ac; }
+
+  .uploader{
+    border:2px dashed rgba(217,168,36,0.55);
+    border-radius:6px;
+    padding:28px;
+    text-align:center;
+    background:rgba(255,255,255,0.03);
+    transition:border-color .2s ease, background .2s ease;
+    cursor:pointer;
+  }
+  .uploader.dragover{
+    border-color:var(--saffron);
+    background:rgba(217,168,36,0.08);
+  }
+  .uploader input{ display:none; }
+  .uploader .upload-icon{
+    width:40px; height:40px; margin:0 auto 12px;
+    color:var(--saffron);
+  }
+  .uploader p{ margin:0; font-size:0.95rem; color:#e7deca; }
+  .uploader p.hint{ font-size:0.8rem; color:#9d977f; margin-top:6px; }
+
+  .gallery-grid{
+    margin-top:30px;
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(150px, 1fr));
+    gap:14px;
+  }
+  .gallery-item{
+    position:relative;
+    aspect-ratio:1/1;
+    border-radius:4px;
+    overflow:hidden;
+    background:var(--indigo-mid);
+    border:1px solid rgba(255,255,255,0.08);
+  }
+  .gallery-item img{
+    width:100%; height:100%; object-fit:cover; display:block;
+  }
+  .gallery-item .remove-btn{
+    position:absolute; top:6px; right:6px;
+    width:24px; height:24px;
+    border:none; border-radius:50%;
+    background:rgba(20,15,10,0.65);
+    color:#fff;
+    font-size:14px;
+    line-height:1;
+    cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .gallery-item .remove-btn:hover{ background:var(--adras-magenta); }
+  .gallery-empty{
+    margin-top:24px;
+    font-size:0.9rem;
+    color:#9d977f;
+    font-style:italic;
+  }
+
+  footer{
+    padding:28px 6vw;
+    text-align:center;
+    font-size:0.85rem;
+    color:#5a5142;
+  }
+</style>
+</head>
+<body>
+
+  <header>
+    <div class="brand">
+      <svg class="logo-mark" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Логотип SFT">
+        <circle cx="32" cy="32" r="31" fill="#182449" stroke="#d9a824" stroke-width="2"/>
+        <path d="M6 40 C 20 24, 44 24, 58 40" stroke="#3f6b4a" stroke-width="3" fill="none" opacity="0.6"/>
+        <text x="32" y="30" text-anchor="middle" font-family="Georgia, serif" font-weight="700" font-size="20" fill="#f3ead6">SFT</text>
+        <line x1="16" y1="40" x2="48" y2="40" stroke="#d9a824" stroke-width="2"/>
+        <circle cx="32" cy="47" r="3" fill="#b23a63"/>
+      </svg>
+      <div class="brand-text">
+        <p class="name">SFT</p>
+        <p class="tagline">Site for Tajiks</p>
+      </div>
+    </div>
+    <nav>
+      <a href="#about">О сайте</a>
+      <a href="#gallery">Галерея</a>
+    </nav>
+  </header>
+
+  <div class="ikat-strip"></div>
+
+  <div class="hero">
+    <div class="hero-inner">
+      <h1>Пространство для тех, кто <span>говорит на языке гор и адраса</span></h1>
+      <p>SFT — место, где собираются истории, лица и цвета таджикской культуры. Делитесь своими фотографиями и стройте общую галерею вместе с сообществом.</p>
+      <a class="cta" href="#gallery">Загрузить фото</a>
+    </div>
+  </div>
+
+  <section id="about">
+    <h2>О сайте</h2>
+    <p class="lead">SFT задуман как открытая витрина сообщества: место, куда можно принести кадр с праздника, вид на Памир или портрет — и увидеть его рядом с другими.</p>
+    <div class="about-grid">
+      <div class="card">
+        <h3>Общая галерея</h3>
+        <p>Каждый может добавить изображение — оно сразу появляется в сетке ниже, без регистрации и лишних шагов.</p>
+      </div>
+      <div class="card">
+        <h3>Живое сообщество</h3>
+        <p>Фотографии остаются в этой сессии браузера — это рабочий прототип функции добавления картинок, готовый к подключению настоящего хранилища.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="gallery" style="max-width:none; padding:0 6vw 64px;">
+    <div class="gallery-panel">
+      <div class="gallery-panel-inner">
+        <h2>Галерея</h2>
+        <p class="lead">Перетащите изображение в область ниже или нажмите, чтобы выбрать файл с компьютера.</p>
+
+        <label class="uploader" id="uploader" for="fileInput">
+          <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+            <path d="M12 16V4M12 4l-4 4M12 4l4 4" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <p>Нажмите или перетащите картинку сюда</p>
+          <p class="hint">Поддерживаются JPG, PNG, GIF, WebP</p>
+          <input type="file" id="fileInput" accept="image/*" multiple>
+        </label>
+
+        <div class="gallery-grid" id="galleryGrid"></div>
+        <p class="gallery-empty" id="emptyMsg">Пока здесь пусто — добавьте первую фотографию.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>SFT — Site for Tajiks</footer>
+
+<script>
+  const fileInput  = document.getElementById('fileInput');
+  const uploader   = document.getElementById('uploader');
+  const grid       = document.getElementById('galleryGrid');
+  const emptyMsg   = document.getElementById('emptyMsg');
+
+  function updateEmptyState(){
+    emptyMsg.style.display = grid.children.length ? 'none' : 'block';
+  }
+
+  // ---- основная функция добавления картинки ----
+  function addImage(file){
+    if(!file || !file.type.startsWith('image/')) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const item = document.createElement('div');
+      item.className = 'gallery-item';
+
+      const img = document.createElement('img');
+      img.src = e.target.result;
+      img.alt = file.name;
+
+      const removeBtn = document.createElement('button');
+      removeBtn.className = 'remove-btn';
+      removeBtn.innerHTML = '&times;';
+      removeBtn.title = 'Удалить';
+      removeBtn.onclick = () => {
+        item.remove();
+        updateEmptyState();
+      };
+
+      item.appendChild(img);
+      item.appendChild(removeBtn);
+      grid.prepend(item);
+      updateEmptyState();
+    };
+    reader.readAsDataURL(file);
+  }
+
+  fileInput.addEventListener('change', (e) => {
+    Array.from(e.target.files).forEach(addImage);
+    fileInput.value = '';
+  });
+
+  ['dragenter','dragover'].forEach(evt =>
+    uploader.addEventListener(evt, (e) => {
+      e.preventDefault();
+      uploader.classList.add('dragover');
+    })
+  );
+  ['dragleave','drop'].forEach(evt =>
+    uploader.addEventListener(evt, (e) => {
+      e.preventDefault();
+      uploader.classList.remove('dragover');
+    })
+  );
+  uploader.addEventListener('drop', (e) => {
+    Array.from(e.dataTransfer.files).forEach(addImage);
+  });
+
+  updateEmptyState();
+</script>
+
+</body>
+</html>
